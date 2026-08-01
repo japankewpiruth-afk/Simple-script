@@ -1,0 +1,244 @@
+-- [[ Simple script 3.5 - Ultra Rainbow Edition ]]
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+local TeleportService = game:GetService("TeleportService")
+
+local LP = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
+
+if CoreGui:FindFirstChild("SimpleScriptUltraUI") then
+	CoreGui.SimpleScriptUltraUI:Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui", CoreGui)
+ScreenGui.Name = "SimpleScriptUltraUI"
+ScreenGui.ResetOnSpawn = false
+
+local Main = Instance.new("Frame", ScreenGui)
+Main.Size = UDim2.new(0, 560, 0, 310) 
+Main.Position = UDim2.new(0.5, -280, 0.5, -155)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+Main.Active = true
+Main.Draggable = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 12)
+
+local MainStroke = Instance.new("UIStroke", Main)
+MainStroke.Thickness = 3.5
+MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+local Title = Instance.new("TextLabel", Main)
+Title.Size = UDim2.new(0, 350, 0, 34)
+Title.Position = UDim2.new(0, 15, 0, 4)
+Title.Text = "⚡ SIMPLE SCRIPT 3.5 [ULTRA RAINBOW]"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 14
+Title.Font = Enum.Font.FredokaOne
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.BackgroundTransparency = 1
+
+local MiniBtn = Instance.new("TextButton", Main)
+MiniBtn.Size = UDim2.new(0, 28, 0, 24)
+MiniBtn.Position = UDim2.new(1, -36, 0, 8)
+MiniBtn.Text = "–"
+MiniBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MiniBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+MiniBtn.Font = Enum.Font.SourceSansBold
+MiniBtn.TextSize = 18
+Instance.new("UICorner", MiniBtn).CornerRadius = UDim.new(0, 6)
+
+local Credit = Instance.new("TextLabel", Main)
+Credit.Size = UDim2.new(0, 220, 0, 18)
+Credit.Position = UDim2.new(1, -228, 1, -18)
+Credit.Text = "🔥 Made by Japan and Gemini 🔥"
+Credit.TextColor3 = Color3.fromRGB(160, 160, 170)
+Credit.TextSize = 10
+Credit.Font = Enum.Font.SourceSansBold
+Credit.TextXAlignment = Enum.TextXAlignment.Right
+Credit.BackgroundTransparency = 1
+
+-- ปุ่มย่อตัว S
+local SIcon = Instance.new("TextButton", ScreenGui)
+SIcon.Size = UDim2.new(0, 50, 0, 50)
+SIcon.Position = UDim2.new(0.04, 0, 0.4, 0)
+SIcon.Text = "S"
+SIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+SIcon.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+SIcon.Font = Enum.Font.FredokaOne
+SIcon.TextSize = 28
+SIcon.Visible = false
+SIcon.Active = true
+SIcon.Draggable = true
+Instance.new("UICorner", SIcon).CornerRadius = UDim.new(1, 0)
+
+local SStroke = Instance.new("UIStroke", SIcon)
+SStroke.Thickness = 3.5
+
+task.spawn(function()
+	while true do
+		local hue = (tick() % 3) / 3
+		local rainbowColor = Color3.fromHSV(hue, 1, 1)
+		MainStroke.Color = rainbowColor
+		SStroke.Color = rainbowColor
+		Title.TextColor3 = rainbowColor
+		SIcon.TextColor3 = rainbowColor
+		task.wait(0.03)
+	end
+end)
+
+MiniBtn.MouseButton1Click:Connect(function() Main.Visible = false SIcon.Visible = true end)
+SIcon.MouseButton1Click:Connect(function() Main.Visible = true SIcon.Visible = false end)
+
+local Sidebar = Instance.new("ScrollingFrame", Main)
+Sidebar.Size = UDim2.new(0, 145, 0, 250)
+Sidebar.Position = UDim2.new(0, 10, 0, 42)
+Sidebar.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+Sidebar.ScrollBarThickness = 2
+Sidebar.CanvasSize = UDim2.new(0, 0, 0, 255)
+Instance.new("UICorner", Sidebar).CornerRadius = UDim.new(0, 8)
+
+local SidebarLayout = Instance.new("UIListLayout", Sidebar)
+SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SidebarLayout.Padding = UDim.new(0, 4)
+
+local ContentArea = Instance.new("Frame", Main)
+ContentArea.Size = UDim2.new(0, 385, 0, 245)
+ContentArea.Position = UDim2.new(0, 163, 0, 42)
+ContentArea.BackgroundTransparency = 1
+
+local pages = {}
+
+local function createTab(tabName, order)
+	local tabBtn = Instance.new("TextButton", Sidebar)
+	tabBtn.Size = UDim2.new(0.95, 0, 0, 36)
+	tabBtn.Text = tabName
+	tabBtn.TextColor3 = Color3.fromRGB(160, 160, 175)
+	tabBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 34)
+	tabBtn.Font = Enum.Font.SourceSansBold
+	tabBtn.TextSize = 12
+	tabBtn.LayoutOrder = order
+	Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 6)
+
+	local pageScroll = Instance.new("ScrollingFrame", ContentArea)
+	pageScroll.Size = UDim2.new(1, 0, 1, 0)
+	pageScroll.CanvasSize = UDim2.new(0, 0, 0, 370)
+	pageScroll.ScrollBarThickness = 4
+	pageScroll.BackgroundTransparency = 1
+	pageScroll.Visible = false
+
+	local pageLayout = Instance.new("UIListLayout", pageScroll)
+	pageLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	pageLayout.Padding = UDim.new(0, 5)
+
+	pages[tabName] = {btn = tabBtn, scroll = pageScroll}
+
+	tabBtn.MouseButton1Click:Connect(function()
+		for name, tab in pairs(pages) do
+			tab.scroll.Visible = false
+			tab.btn.BackgroundColor3 = Color3.fromRGB(25, 25, 34)
+			tab.btn.TextColor3 = Color3.fromRGB(160, 160, 175)
+		end
+		pageScroll.Visible = true
+		tabBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 240)
+		tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	end)
+
+	return pageScroll
+end
+
+local pagePlayer = createTab("1. Player (ผู้เล่น)", 1)
+local pageFE = createTab("2. FE / Visual", 2)
+local pageEnv = createTab("3. Environment", 3)
+local pageOP = createTab("4. OP Cheats (โกง)", 4)
+local pageTroll = createTab("5. Fun / Troll (เกรียน)", 5)
+
+pages["1. Player (ผู้เล่น)"].scroll.Visible = true
+pages["1. Player (ผู้เล่น)"].btn.BackgroundColor3 = Color3.fromRGB(0, 150, 240)
+pages["1. Player (ผู้เล่น)"].btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local function addToggle(parent, name, callback)
+	local btn = Instance.new("TextButton", parent)
+	btn.Size = UDim2.new(0.96, 0, 0, 30)
+	btn.Text = name
+	btn.TextColor3 = Color3.fromRGB(220, 220, 220)
+	btn.BackgroundColor3 = Color3.fromRGB(24, 24, 32)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextSize = 12
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+	local btnStroke = Instance.new("UIStroke", btn)
+	btnStroke.Color = Color3.fromRGB(45, 45, 60)
+	btnStroke.Thickness = 1.2
+
+	local state = false
+	btn.MouseButton1Click:Connect(function()
+		state = not state
+		btn.BackgroundColor3 = state and Color3.fromRGB(0, 180, 90) or Color3.fromRGB(24, 24, 32)
+		btn.TextColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(220, 220, 220)
+		btnStroke.Color = state and Color3.fromRGB(0, 255, 120) or Color3.fromRGB(45, 45, 60)
+		callback(state)
+	end)
+end
+
+-- 1. Player
+addToggle(pagePlayer, "1. Speed Hack (100)", function(a) task.spawn(function() while a and task.wait() do pcall(function() LP.Character.Humanoid.WalkSpeed = 100 end) end pcall(function() LP.Character.Humanoid.WalkSpeed = 16 end) end) end)
+addToggle(pagePlayer, "2. Super Jump (100)", function(a) task.spawn(function() while a and task.wait() do pcall(function() LP.Character.Humanoid.JumpPower = 100 end) end pcall(function() LP.Character.Humanoid.JumpPower = 50 end) end) end)
+local ncConn; addToggle(pagePlayer, "3. Noclip (ทะลุกำแพง)", function(a) if a then ncConn = RunService.Stepped:Connect(function() if LP.Character then for _,p in ipairs(LP.Character:GetDescendants()) do if p:IsA("BasePart") then p.CanCollide = false end end end end) else if ncConn then ncConn:Disconnect() end end end)
+local flyConn, bv, bg; addToggle(pagePlayer, "4. Fly (บินเสถียร)", function(a) local c=LP.Character if not c or not c:FindFirstChild("HumanoidRootPart") then return end local hrp=c.HumanoidRootPart local hum=c:FindFirstChildOfClass("Humanoid") if a then bv=Instance.new("BodyVelocity",hrp) bv.MaxForce=Vector3.new(1e9,1e9,1e9) bg=Instance.new("BodyGyro",hrp) bg.MaxTorque=Vector3.new(1e9,1e9,1e9) hum.PlatformStand=true flyConn=RunService.RenderStepped:Connect(function() bg.CFrame=Camera.CFrame local md=hum.MoveDirection local spd=60 bv.Velocity=(Camera.CFrame.LookVector*(md.Z*-spd))+(Camera.CFrame.RightVector*(md.X*spd))+Vector3.new(0,Camera.CFrame.LookVector.Y*md.Magnitude*spd,0) end) else if flyConn then flyConn:Disconnect() end if bv then bv:Destroy() end if bg then bg:Destroy() end if hum then hum.PlatformStand=false end end end)
+local infJConn; addToggle(pagePlayer, "5. Infinite Jump (กระโดดรัวๆ)", function(a) if a then infJConn=UserInputService.JumpRequest:Connect(function() pcall(function() LP.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping) end) end) else if infJConn then infJConn:Disconnect() end end end)
+local airConn, airPart; addToggle(pagePlayer, "6. Air Walk (เดินบนอากาศ)", function(a) if a then airPart=Instance.new("Part",Workspace) airPart.Size=Vector3.new(5,1,5) airPart.Transparency=1 airPart.Anchored=true airPart.CanCollide=true airConn=RunService.RenderStepped:Connect(function() if LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then airPart.CFrame=CFrame.new(LP.Character.HumanoidRootPart.Position.X, LP.Character.HumanoidRootPart.Position.Y-3.4, LP.Character.HumanoidRootPart.Position.Z) end end) else if airConn then airConn:Disconnect() end if airPart then airPart:Destroy() end end end)
+local spinConn; addToggle(pagePlayer, "7. Spinbot (หมุนตัว)", function(a) if a then spinConn=RunService.RenderStepped:Connect(function() pcall(function() LP.Character.HumanoidRootPart.CFrame = LP.Character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(35), 0) end) end) else if spinConn then spinConn:Disconnect() end end end)
+addToggle(pagePlayer, "8. Sit Down (นั่งลง)", function(a) pcall(function() LP.Character.Humanoid.Sit = a end) end)
+addToggle(pagePlayer, "9. Platform Stand (ลอยตัว)", function(a) pcall(function() LP.Character.Humanoid.PlatformStand = a end) end)
+addToggle(pagePlayer, "10. Reset Character (รีตัว)", function(a) if a then pcall(function() LP.Character.Humanoid.Health = 0 end) end end)
+
+-- 2. FE / Visual
+addToggle(pageFE, "11. Fullbright (ความสว่าง)", function(a) Lighting.Brightness = a and 2 or 1 Lighting.ClockTime = a and 12 or 14 Lighting.GlobalShadows = not a end)
+addToggle(pageFE, "12. ESP Players (มองทะลุ)", function(a) if a then RunService:BindToRenderStep("FE_ESP", 300, function() for _,p in ipairs(Players:GetPlayers()) do if p~=LP and p.Character and not p.Character:FindFirstChild("ESP_Box") then local hl=Instance.new("Highlight",p.Character) hl.Name="ESP_Box" hl.FillColor=Color3.fromRGB(255,30,30) end end end) else RunService:UnbindFromRenderStep("FE_ESP") for _,p in ipairs(Players:GetPlayers()) do if p.Character and p.Character:FindFirstChild("ESP_Box") then p.Character.ESP_Box:Destroy() end end end end)
+addToggle(pageFE, "13. Remove Fog (ลบหมอก)", function(a) Lighting.FogEnd = a and 100000 or 500 end)
+local skyBk; addToggle(pageFE, "14. Remove Sky (ลบท้องฟ้า)", function(a) if a then skyBk=Lighting:FindFirstChildOfClass("Sky") if skyBk then skyBk.Parent=nil end else if skyBk then skyBk.Parent=Lighting end end end)
+addToggle(pageFE, "15. Wide FOV 120 (มุมกว้าง)", function(a) Camera.FieldOfView = a and 120 or 70 end)
+addToggle(pageFE, "16. Theme Night (กลางคืน)", function(a) Lighting.ClockTime = a and 0 or 14 end)
+addToggle(pageFE, "17. Theme Morning (เช้า)", function(a) Lighting.ClockTime = a and 8 or 14 end)
+addToggle(pageFE, "18. Purple Ambient (หมอกม่วง)", function(a) Lighting.OutdoorAmbient = a and Color3.fromRGB(150, 50, 200) or Color3.fromRGB(128, 128, 128) end)
+local sRays; addToggle(pageFE, "19. Sun Rays Effect (แสงอาทิตย์)", function(a) if a then sRays=Instance.new("SunRaysEffect",Lighting) else if sRays then sRays:Destroy() end end end)
+local dof; addToggle(pageFE, "20. Depth of Field (เบลอหลัง)", function(a) if a then dof=Instance.new("DepthOfFieldEffect",Lighting) else if dof me then dof:Destroy() end end end)
+
+-- 3. Environment
+addToggle(pageEnv, "21. Cyberpunk Vibe", function(a) Lighting.OutdoorAmbient = a and Color3.fromRGB(0, 255, 255) or Color3.fromRGB(128,128,128) end)
+addToggle(pageEnv, "22. Crimson Red", function(a) Lighting.OutdoorAmbient = a and Color3.fromRGB(255, 0, 50) or Color3.fromRGB(128,128,128) end)
+addToggle(pageEnv, "23. Golden Hour", function(a) Lighting.ClockTime = a and 17.5 or 14 end)
+addToggle(pageEnv, "24. Clear World (FPS Boost)", function(a) if a then for _,v in ipairs(Workspace:GetDescendants()) do if v:IsA("BasePart") then v.Material = Enum.Material.SmoothPlastic end end end end)
+addToggle(pageEnv, "25. Snowy World", function(a) Lighting.OutdoorAmbient = a and Color3.fromRGB(200, 230, 255) or Color3.fromRGB(128,128,128) Lighting.FogEnd = a and 300 or 100000 end)
+addToggle(pageEnv, "26. Under Water Vibe", function(a) Lighting.OutdoorAmbient = a and Color3.fromRGB(0, 100, 200) or Color3.fromRGB(128,128,128) end)
+addToggle(pageEnv, "27. Matrix Green", function(a) Lighting.OutdoorAmbient = a and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(128,128,128) end)
+addToggle(pageEnv, "28. Space Void", function(a) Lighting.ClockTime = a and 0 or 14 Lighting.Brightness = a and 0 or 1 end)
+addToggle(pageEnv, "29. Vintage Film", function(a) Lighting.OutdoorAmbient = a and Color3.fromRGB(220, 180, 140) or Color3.fromRGB(128,128,128) end)
+addToggle(pageEnv, "30. Dreamy Soft", function(a) Lighting.Brightness = a and 3 or 1 end)
+
+-- 4. OP Cheats
+local antiFlingConn; addToggle(pageOP, "31. Anti-Fling (กันโดนชนลอย)", function(a) if a then antiFlingConn=RunService.Stepped:Connect(function() for _,p in ipairs(Players:GetPlayers()) do if p~=LP and p.Character then for _,v in ipairs(p.Character:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide=false v.Velocity=Vector3.new(0,0,0) end end end end end) else if antiFlingConn then antiFlingConn:Disconnect() end end end)
+local flingConn; addToggle(pageOP, "32. Safe Orbit Fling (ผลักคนลอย)", function(a) if a then flingConn = RunService.Heartbeat:Connect(function() local char = LP.Character local hrp = char and char:FindFirstChild("HumanoidRootPart") if hrp then for _, p in ipairs(Players:GetPlayers()) do if p ~= LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then local targetHrp = p.Character.HumanoidRootPart if (targetHrp.Position - hrp.Position).Magnitude < 10 then targetHrp.Velocity = Vector3.new(100000, 100000, 100000) end end end end end) else if flingConn then flingConn:Disconnect() end end end)
+local healConn; addToggle(pageOP, "33. Auto Heal (รีเลือด)", function(a) if a then healConn=RunService.RenderStepped:Connect(function() pcall(function() LP.Character.Humanoid.Health = LP.Character.Humanoid.MaxHealth end) end) else if healConn then healConn:Disconnect() end end end)
+local clickTpConn; addToggle(pageOP, "34. Click Teleport (วาร์ป)", function(a) local m=LP:GetMouse() if a then clickTpConn=m.Button1Down:Connect(function() if m.Hit and LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then LP.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0)) end end) else if clickTpConn then clickTpConn:Disconnect() end end end)
+addToggle(pageOP, "35. Enable Shift Lock", function(a) pcall(function() LP.DevEnableMouseLock = a end) end)
+addToggle(pageOP, "36. Load Infinite Yield", function(a) if a then loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))() end end)
+local aimConn; addToggle(pageOP, "37. Target Lock (ล็อกเป้าใกล้สุด)", function(a) if a then aimConn = RunService.RenderStepped:Connect(function() local closestPlayer = nil local shortestDistance = math.huge for _, p in ipairs(Players:GetPlayers()) do if p ~= LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then local dist = (p.Character.HumanoidRootPart.Position - LP.Character.HumanoidRootPart.Position).Magnitude if dist < shortestDistance then shortestDistance = dist closestPlayer = p end end end if closestPlayer and closestPlayer.Character:FindFirstChild("HumanoidRootPart") then Camera.CFrame = CFrame.new(Camera.CFrame.Position, closestPlayer.Character.HumanoidRootPart.Position) end end) else if aimConn then aimConn:Disconnect() end end end)
+addToggle(pageOP, "38. Client BTools", function(a) if a then Instance.new("HopperBin", LP.Backpack).BinType = 4 Instance.new("HopperBin", LP.Backpack).BinType = 3 Instance.new("HopperBin", LP.Backpack).BinType = 2 end end)
+addToggle(pageOP, "39. Invisible Visual (ล่องหน)", function(a) if LP.Character then for _,v in ipairs(LP.Character:GetDescendants()) do if v:IsA("BasePart") or v:IsA("Decal") then v.Transparency = a and 1 or 0 end end end end)
+addToggle(pageOP, "40. Anti-AFK (กันหลุด)", function(a) local vu=game:GetService("VirtualUser") LP.Idled:Connect(function() vu:Button2Down(Vector2.new(0,0),Workspace.CurrentCamera.CFrame) task.wait(1) vu:Button2Up(Vector2.new(0,0),Workspace.CurrentCamera.CFrame) end) end)
+
+-- 5. Fun / Troll
+addToggle(pageTroll, "41. Headless Glitch (หัวหาย)", function(a) if LP.Character and LP.Character:FindFirstChild("Head") then LP.Character.Head.Transparency = a and 1 or 0 if LP.Character.Head:FindFirstChildOfClass("Decal") then LP.Character.Head:FindFirstChildOfClass("Decal").Transparency = a and 1 or 0 end end end)
+local fakeLagConn; addToggle(pageTroll, "42. Fake Lag / Desync", function(a) if a then fakeLagConn=RunService.Heartbeat:Connect(function() if LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then LP.Character.HumanoidRootPart.Anchored = true task.wait(0.1) LP.Character.HumanoidRootPart.Anchored = false end end) else if fakeLagConn then fakeLagConn:Disconnect() end end end)
+local crazySpinConn; addToggle(pageTroll, "43. Crazy Spin (หมุนควง)", function(a) if a then crazySpinConn=RunService.RenderStepped:Connect(function() pcall(function() LP.Character.HumanoidRootPart.CFrame = LP.Character.HumanoidRootPart.CFrame * CFrame.Angles(math.rad(45), math.rad(45), math.rad(45)) end) end) else if crazySpinConn then crazySpinConn:Disconnect() end end end)
+addToggle(pageTroll, "44. Dance Anim (เต้น FE)", function(a) local hum=LP.Character and LP.Character:FindFirstChildOfClass("Humanoid") if hum then if a then local anim=Instance.new("Animation") anim.AnimationId="rbxassetid://182436842" _G.danceTrack=hum:LoadAnimation(anim) _G.danceTrack:Play() else if _G.danceTrack then _G.danceTrack:Stop() end end end end)
+addToggle(pageTroll, "45. Creepy Crawl (คลานสยอง)", function(a) pcall(function() LP.Character.Humanoid.HipHeight = a and -2 or 0 end) end)
+local headSpinConn; addToggle(pageTroll, "46. Spin Head Only (หมุนหัว)", function(a) if a then headSpinConn=RunService.RenderStepped:Connect(function() if LP.Character and LP.Character:FindFirstChild("Head") then LP.Character.Head.CFrame = LP.Character.Head.CFrame * CFrame.Angles(0, math.rad(25), 0) end end) else if headSpinConn then headSpinConn:Disconnect() end end end)
+addToggle(pageTroll, "47. Giant Head Visual (ขยายหัว)", function(a) if LP.Character and LP.Character:FindFirstChild("Head") then local mesh=LP.Character.Head:FindFirstChildOfClass("SpecialMesh") if mesh then mesh.Scale = a and Vector3.new(3.5,3.5,3.5) or Vector3.new(1.25,1.25,1.25) end end end)
+local rgbCharConn; addToggle(pageTroll, "48. Rainbow Character (ตัวสีรุ้ง)", function(a) if a then rgbCharConn=RunService.RenderStepped:Connect(function() local color=Color3.fromHSV(tick()%2/2, 1, 1) for _,v in ipairs(LP.Character:GetChildren()) do if v:IsA("BasePart") then v.Color = color end end end) else if rgbCharConn then rgbCharConn:Disconnect() end end end)
+addToggle(pageTroll, "49. Loud Sound Effect", function(a) if a then local s=Instance.new("Sound",Workspace) s.SoundId="rbxassetid://9114223177" s.Volume=3 s:Play() end end)
+addToggle(pageTroll, "50. Rejoin Server (รีจอย)", function(a) if a then pcall(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LP) end) end end)
